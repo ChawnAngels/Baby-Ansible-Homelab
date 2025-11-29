@@ -1,0 +1,9 @@
+tasks:
+  - name: create_vlans
+    commands:
+      - vlan 10
+      - name RED
+      - vlan 20
+      - name BLUE
+      - vlan 30
+      - name GREEN
