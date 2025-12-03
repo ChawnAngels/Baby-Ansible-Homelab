@@ -1,9 +1,63 @@
+
+# tasks/trunk_lab.yaml
+# Lab 1 – VLAN trunking between CORE-2960X and ACCESS-2960.
+# This file tells Baby Ansible what commands to run on which switch.
+
+lab: trunk_lab
+
 tasks:
-  - name: create_vlans
+  - name: Configure trunk on CORE-2960X
+    hosts: core_2960x          
     commands:
-      - vlan 10
-      - name RED
-      - vlan 20
-      - name BLUE
-      - vlan 30
-      - name GREEN
+      - conf t
+      - interface Gi1/0/4
+      - switchport mode trunk
+      - switchport trunk allowed vlan 10,20,30,99
+      - description Trunk to ACCESS-2960
+      - end
+
+  - name: Configure trunk on ACCESS-2960
+    hosts: access_2960         
+    commands:
+      - conf t
+      - interface Fa0/4
+      - switchport mode trunk
+      - switchport trunk allowed vlan 10,20,30,99
+      - description Trunk to CORE-2960X
+      - end
+
+  - name: Configure access ports for VLAN 10/20/30 on CORE-2960X
+    hosts: core_2960x
+    commands:
+      - conf t
+      - interface Gi1/0/1
+      - switchport mode access
+      - switchport access vlan 10
+      - description VLAN10 endpoint
+      - interface Gi1/0/2
+      - switchport mode access
+      - switchport access vlan 20
+      - description VLAN20 endpoint
+      - interface Gi1/0/3
+      - switchport mode access
+      - switchport access vlan 30
+      - description VLAN30 endpoint
+      - end
+
+  - name: Configure access ports for VLAN 10/20/30 on ACCESS-2960
+    hosts: access_2960
+    commands:
+      - conf t
+      - interface Fa0/1
+      - switchport mode access
+      - switchport access vlan 10
+      - description VLAN10 endpoint
+      - interface Fa0/2
+      - switchport mode access
+      - switchport access vlan 20
+      - description VLAN20 endpoint
+      - interface Fa0/3
+      - switchport mode access
+      - switchport access vlan 30
+      - description VLAN30 endpoint
+      - end
