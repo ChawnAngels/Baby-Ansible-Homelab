@@ -1,15 +1,19 @@
-# NOTE: IPs and credentials below are placeholders.
-# I will update these later after I set up management VLAN + SSH on my switches.
+# inventory.yaml
+# This is like a contact list for my lab switches.
 
 switches:
-  - name: core-2960x
-    host: 192.168.99.11         # placeholder mgmt IP for the 2960-X
-    device_type: cisco_ios
-    username: CHANGE_ME_LATER   # SSH username (will create on switch later)
-    password: CHANGE_ME_LATER   # SSH password (will set later)
+  hosts:
+    core_2960x:
+      host: 192.168.99.11    # CORE-2960X: management IP on VLAN 99
+      platform: cisco_ios
+      mgmt_vlan: 99
 
-  - name: access-2960
-    host: 192.168.99.12         # placeholder mgmt IP for the 2960
-    device_type: cisco_ios
-    username: CHANGE_ME_LATER
-    password: CHANGE_ME_LATER
+    access_2960:
+      host: 192.168.99.12    # ACCESS-2960: management IP on VLAN 99
+      platform: cisco_ios
+      mgmt_vlan: 99
+
+defaults:
+  username: netadmin         
+
+  password: ""               
