@@ -3,6 +3,7 @@
 #
 # I wrote this script to practice network automation without actually
 # touching the real switches yet. Right now it:
+#   - locates the repo root based on this file's location
 #   - loads inventory.yaml (my lab switches and their IPs)
 #   - loads tasks/trunk_lab.yaml (the commands I want to push)
 #   - prints what it would send to each device (dry run only)
@@ -11,20 +12,30 @@
 # so this file is basically my "brain" for planning changes.
 
 import yaml
+from pathlib import Path
 
+# Figure out project root based on THIS file, not on where I run Python from.
+# __file__            -> scripts\run_trunk_lab.py
+# .parent             -> scripts\
+# .parent.parent      -> repo root (Baby-Ansible-Homelab\)
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+INVENTORY_FILE = BASE_DIR / "inventory.yaml"
+TASKS_FILE = BASE_DIR / "tasks" / "trunk_lab.yaml"
 
 # 1. Load inventory (devices) from YAML file
-with open("inventory.yaml") as f:
+with INVENTORY_FILE.open() as f:
     inventory = yaml.safe_load(f)
 
 # 2. Load trunk lab tasks from YAML file
-with open("tasks/trunk_lab.yaml") as f:
+with TASKS_FILE.open() as f:
     trunk_lab = yaml.safe_load(f)
 
 # 3. Pull out the parts I care about from the YAML data
 hosts = inventory["switches"]["hosts"]
 defaults = inventory.get("defaults", {})
 tasks = trunk_lab["tasks"]
+
 
 
 def print_plan_for_task(task):
